@@ -1,0 +1,6 @@
+{
+  "name": "Mini Notes with LLM Summary",
+  "tagline": "Capture short notes and summarize them with Anna sampling.",
+  "description": "A local-first Anna App demo whose notes use the storage Host API and whose summary travels through an Executa Tool to host LLM sampling.",
+  "category": "productivity"
+}

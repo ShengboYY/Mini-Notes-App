@@ -209,6 +209,12 @@ tempCodeRunnerFile.py
 # PyPI configuration file
 .pypirc
 
+# Node / Anna App local build state
+node_modules/
+bundle/
+dist-anna/
+.anna/
+
 # Marimo
 marimo/_static/
 marimo/_lsp/
