@@ -1,0 +1,71 @@
+name: Release Executa binaries
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build ${{ matrix.platform }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-14
+            platform: darwin-arm64
+            binary: executas/notes-summarizer/dist/notes-summarizer
+            archive: executas/notes-summarizer/dist-anna/notes-summarizer-darwin-arm64.tar.gz
+          - os: macos-15-intel
+            platform: darwin-x86_64
+            binary: executas/notes-summarizer/dist/notes-summarizer
+            archive: executas/notes-summarizer/dist-anna/notes-summarizer-darwin-x86_64.tar.gz
+          - os: windows-latest
+            platform: windows-x86_64
+            binary: executas/notes-summarizer/dist/notes-summarizer.exe
+            archive: executas/notes-summarizer/dist-anna/notes-summarizer-windows-x86_64.zip
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Build Anna binary archive
+        run: python scripts/package_binary.py
+
+      - name: Smoke-test describe JSON-RPC
+        run: python scripts/smoke_binary.py --binary "${{ matrix.binary }}"
+
+      - name: Upload matrix artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: notes-summarizer-${{ matrix.platform }}
+          path: ${{ matrix.archive }}
+          if-no-files-found: error
+
+  release:
+    name: Publish GitHub Release assets
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: release-assets
+          merge-multiple: true
+
+      - name: Attach all platforms to the GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: release-assets/*
+          generate_release_notes: true
