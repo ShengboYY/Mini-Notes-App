@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tool-dev-notes-summarizer"
+version = "1.0.0"
+description = "Mini Notes Executa that summarizes notes through host LLM sampling"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+build = ["pyinstaller>=6.19.0"]
+
+[project.scripts]
+"tool-dev-notes-summarizer" = "notes_summarizer:main"
+
+[tool.setuptools]
+py-modules = ["notes_summarizer"]

@@ -1,0 +1,9 @@
+{
+  "slug": "notes-summarizer",
+  "name": "notes-summarizer",
+  "version": "1.0.0",
+  "executa_type": "tool",
+  "description": "Summarize Mini Notes through Anna host sampling.",
+  "tool_id": "tool-dev-notes-summarizer",
+  "type": "python"
+}

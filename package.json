@@ -8,7 +8,9 @@
     "build": "tsc --noEmit && vite build",
     "test": "vitest run",
     "anna:validate": "anna-app validate --strict",
-    "anna:dev": "anna-app dev --no-llm"
+    "anna:dev": "anna-app dev --no-llm",
+    "anna:executa:mock": "anna-app executa dev --dir executas/notes-summarizer --mock-sampling fixtures/sampling.jsonl --invoke summarize --args '{\"notes\":[\"Follow up with the client\",\"Fix the login bug\"]}'",
+    "test:protocol": "python3 scripts/protocol_test.py"
   },
   "dependencies": {
     "react": "18.3.1",
