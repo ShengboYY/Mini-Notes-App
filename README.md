@@ -114,10 +114,10 @@ In `--no-llm` mode, Summarize is expected to surface an error such as:
 
 That error proves the UI reached the Tool route while the harness deliberately disabled its LLM/sampling bridge. It is not the backend sampling test. Notes use the local legacy in-memory runtime state, so refreshing the outer dashboard or restarting `anna-app dev` is not expected to preserve them.
 
-The manifest grants `llm.complete` because the current local runtime maps an
-Executa's reverse `sampling/createMessage` through that dispatcher route. The
-React source never calls `anna.llm.complete`; it only calls
-`anna.tools.invoke`, as required by the assignment.
+The iframe is not granted `llm.complete` and never calls `anna.llm.complete`.
+It only calls `anna.tools.invoke`; the Executa separately negotiates
+`llm.sample` before issuing reverse `sampling/createMessage`, as required by
+the assignment.
 
 The code evidence for storage is in `src/anna/notesStorage.ts`; there is no `localStorage`, IndexedDB, filesystem, or HTTP persistence path.
 

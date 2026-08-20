@@ -30,7 +30,8 @@ MANIFEST = {
             ],
         }
     ],
-    "runtime": {"type": "binary"},
+    # Local development launches this source plugin through uv.
+    "runtime": {"type": "uv", "min_version": "0.1.0"},
 }
 
 

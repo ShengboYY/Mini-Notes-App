@@ -3,8 +3,7 @@
   "permissions": [
     "tools.invoke",
     "storage.read",
-    "storage.write",
-    "llm.complete"
+    "storage.write"
   ],
   "required_executas": [
     {
@@ -23,15 +22,14 @@
         "name": "main",
         "title": "Mini Notes",
         "default": true,
-        "default_size": { "w": 560, "h": 720 },
-        "min_size": { "w": 360, "h": 520 },
+        "default_size": { "w": 1100, "h": 760 },
+        "min_size": { "w": 720, "h": 520 },
         "resizable": true
       }
     ],
     "host_api": {
       "tools": ["tool-dev-notes-summarizer"],
-      "storage": ["get", "set"],
-      "llm": ["complete"]
+      "storage": ["get", "set"]
     },
     "csp_overrides": {},
     "state_merge": "last_writer_wins"

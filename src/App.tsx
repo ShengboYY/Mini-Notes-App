@@ -6,6 +6,8 @@ import { EMPTY_NOTES_DOCUMENT, type NotesDocument } from "./types/note";
 
 type BusyAction = "connecting" | "saving" | "deleting" | "summarizing" | null;
 
+const MAX_LENGTH = 240;
+
 export default function App() {
   const [anna, setAnna] = useState<AnnaRuntime | null>(null);
   const [document, setDocument] = useState<NotesDocument>(EMPTY_NOTES_DOCUMENT);
@@ -112,99 +114,114 @@ export default function App() {
 
   const isConnected = anna !== null;
   const isBusy = busy !== null;
+  const noteCount = document.notes.length;
+  // Newest first, so the freshest thought sits at the top of the flow.
+  const orderedNotes = [...document.notes].reverse();
 
   return (
-    <main className="app-shell">
-      <header className="hero">
+    <div className="app-shell">
+      <aside className="rail">
         <h1>Mini Notes</h1>
-        <p className="subtitle">
-          Capture the small things. Ask Anna for the useful shape of them.
-        </p>
-      </header>
+        <p className="tagline">A quiet place for things worth keeping.</p>
 
-      <section className="composer" aria-labelledby="new-note-title">
-        <div className="section-heading">
-          <h2 id="new-note-title">New note</h2>
-        </div>
-        <div className="composer-row">
-          <label className="sr-only" htmlFor="note-input">
-            Note content
+        <div className="composer">
+          <label className="field-label" htmlFor="note-input">
+            Capture a thought
           </label>
-          <input
+          <textarea
             id="note-input"
             value={input}
             onChange={(event) => setInput(event.target.value)}
             onKeyDown={(event) => {
-              if (event.key === "Enter") void addNote();
+              if (event.key === "Enter" && !event.shiftKey) {
+                event.preventDefault();
+                void addNote();
+              }
             }}
             placeholder="What should you remember?"
-            maxLength={240}
+            maxLength={MAX_LENGTH}
             disabled={!isConnected || isBusy}
           />
-          <button
-            className="primary-button"
-            type="button"
-            onClick={() => void addNote()}
-            disabled={!isConnected || !input.trim() || isBusy}
-          >
-            {busy === "saving" ? "Saving…" : "Add"}
-          </button>
-        </div>
-      </section>
-
-      {error ? <p className="error-message" role="alert">{error}</p> : null}
-
-      <section className="notes-section" aria-labelledby="notes-title">
-        <div className="section-heading">
-          <h2 id="notes-title">Notes</h2>
-          <span className="count">{document.notes.length}</span>
+          <div className="composer-meta">
+            <span className="counter">{MAX_LENGTH - input.length} left</span>
+            <button
+              className="btn btn-accent"
+              type="button"
+              onClick={() => void addNote()}
+              disabled={!isConnected || !input.trim() || isBusy}
+            >
+              {busy === "saving" ? "Saving…" : "Add note"}
+            </button>
+          </div>
         </div>
 
-        {document.notes.length === 0 ? (
-          <p className="empty-state">No notes yet.</p>
-        ) : (
-          <ol className="notes-list">
-            {document.notes.map((note) => (
-              <li key={note.order} className="note-card">
-                <span className="order" aria-label={`Note ${note.order}`}>
-                  {String(note.order).padStart(2, "0")}
-                </span>
-                <p>{note.content}</p>
-                <button
-                  className="delete-button"
-                  type="button"
-                  onClick={() => void deleteNote(note.order)}
-                  disabled={!isConnected || isBusy}
-                  aria-label={`Delete note ${note.order}`}
-                >
-                  Delete
-                </button>
-              </li>
-            ))}
-          </ol>
-        )}
-      </section>
+        <div className="rail-spacer" />
 
-      <section className="summary-section" aria-labelledby="summary-title">
-        <div className="section-heading">
-          <h2 id="summary-title">Summary</h2>
-          <button
-            className="summary-button"
-            type="button"
-            onClick={() => void summarize()}
-            disabled={!isConnected || document.notes.length === 0 || isBusy}
-          >
-            {busy === "summarizing" ? "Summarizing…" : "Summarize"}
-          </button>
-        </div>
+        <button
+          className="btn summarize"
+          type="button"
+          onClick={() => void summarize()}
+          disabled={!isConnected || noteCount === 0 || isBusy}
+        >
+          {busy === "summarizing" ? "Summarizing…" : "Summarize"}
+        </button>
+      </aside>
 
-        <div className="summary-output" aria-live="polite">
-          <p className={summary ? "" : "summary-placeholder"}>
-            {summary || "Your LLM summary will appear here."}
-          </p>
+      <main className="canvas">
+        <div className="canvas-inner">
+          <div className="canvas-head">
+            <h2>Your notes</h2>
+            <span className="count">
+              {noteCount === 1 ? "1 note" : `${noteCount} notes`}
+            </span>
+          </div>
+
+          {error ? (
+            <p className="error-banner" role="alert">
+              {error}
+            </p>
+          ) : null}
+
+          <div aria-live="polite">
+            {summary ? (
+              <div className="summary-card">
+                <p>{summary}</p>
+              </div>
+            ) : null}
+          </div>
+
+          {noteCount === 0 ? (
+            <div className="empty-state">
+              <span className="empty-mark" aria-hidden="true">
+                ✦
+              </span>
+              <p>Nothing here yet</p>
+              <span>Your first thought can be tiny.</span>
+            </div>
+          ) : (
+            <ul className="notes-grid">
+              {orderedNotes.map((note) => (
+                <li key={note.order} className="note-card">
+                  <span className="note-order">
+                    {String(note.order).padStart(2, "0")}
+                  </span>
+                  <p>{note.content}</p>
+                  <button
+                    className="delete-button"
+                    type="button"
+                    onClick={() => void deleteNote(note.order)}
+                    disabled={!isConnected || isBusy}
+                    aria-label={`Delete note ${note.order}`}
+                  >
+                    <span aria-hidden="true">×</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
-      </section>
-    </main>
+      </main>
+    </div>
   );
 }
 

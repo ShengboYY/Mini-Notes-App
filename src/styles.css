@@ -1,222 +1,63 @@
+/* Mini Notes — left rail capture, notes as a two-column flow. */
+
 :root {
-  color: #1d2320;
-  background: #f1f1e9;
-  font-family:
-    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    sans-serif;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
+  --rail: #eae8e3;
+  --canvas: #f5f3ef;
+  --card: #ffffff;
+  --ink: #17171a;
+  --ink-soft: #2c2c31;
+  --muted: #6f6c66;
+  --faint: #9c9990;
+  --line: #e3e0da;
+  --line-soft: #d8d5cf;
+  --accent: #5b4b8a;
+  --accent-hover: #453a6b;
+  --dark: #1a1a1d;
+  --danger: #8a3f3f;
+  --danger-tint: #f6ebe9;
+  --radius-card: 12px;
+  --radius-panel: 14px;
+  --radius-control: 8px;
+  --rail-width: 344px;
+  --canvas-column: 652px;
+  --font: "Space Grotesk", "Poppins", "Segoe UI", system-ui, -apple-system,
+    "Helvetica Neue", sans-serif;
 }
 
 * {
   box-sizing: border-box;
 }
 
+html,
+body,
+#root {
+  height: 100%;
+}
+
 body {
   margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
-  background:
-    radial-gradient(circle at top right, rgba(216, 228, 184, 0.9), transparent 34rem),
-    #f1f1e9;
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
 }
 
-button,
-input {
-  font: inherit;
-}
-
-button {
-  cursor: pointer;
-}
-
-button:disabled,
-input:disabled {
-  cursor: not-allowed;
-  opacity: 0.55;
-}
-
-.app-shell {
-  width: min(760px, 100%);
-  margin: 0 auto;
-  padding: 40px 28px 48px;
-}
-
-.hero {
-  margin-bottom: 32px;
-}
-
-.hero h1 {
-  margin: 4px 0 8px;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(2.8rem, 9vw, 5rem);
-  font-weight: 500;
-  letter-spacing: -0.055em;
-  line-height: 0.95;
-}
-
-.subtitle {
-  max-width: 34rem;
-  margin: 0;
-  color: #616963;
-  line-height: 1.6;
-}
-
-.composer,
-.notes-section,
-.summary-section {
-  border: 1px solid rgba(29, 35, 32, 0.14);
-  border-radius: 24px;
-  background: rgba(255, 255, 252, 0.78);
-  box-shadow: 0 20px 60px rgba(51, 61, 52, 0.08);
-}
-
-.composer,
-.summary-section {
-  padding: 22px;
-}
-
-.notes-section {
-  margin: 18px 0;
-  padding: 22px;
-}
-
-.section-heading {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-}
-
-.section-heading h2 {
-  margin: 0;
-  font-size: 1.05rem;
-}
-
-.count {
-  display: grid;
-  width: 28px;
-  height: 28px;
-  place-items: center;
-  border-radius: 50%;
-  background: #e8ecd9;
-  color: #3f533e;
-  font-size: 0.75rem;
-  font-weight: 700;
-}
-
-.composer-row {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 10px;
-  margin-top: 16px;
-}
-
-input {
-  width: 100%;
-  min-width: 0;
-  padding: 14px 16px;
-  border: 1px solid #cbd0c6;
-  border-radius: 14px;
-  outline: none;
-  background: #fff;
-  color: inherit;
-}
-
-input:focus {
-  border-color: #607c5c;
-  box-shadow: 0 0 0 3px rgba(96, 124, 92, 0.14);
-}
-
-.primary-button,
-.summary-button {
-  border: 0;
-  border-radius: 14px;
-  background: #24372a;
+::selection {
+  background: var(--accent);
   color: #fff;
-  font-weight: 750;
 }
 
-.primary-button {
-  padding: 0 22px;
-}
-
-.summary-button {
-  padding: 12px 18px;
-}
-
-.error-message {
-  margin: 14px 0 0;
-  padding: 12px 16px;
-  border: 1px solid #d7aaa2;
-  border-radius: 14px;
-  background: #fff0ed;
-  color: #8f3d31;
-  line-height: 1.4;
-}
-
-.empty-state {
-  margin: 0;
-  padding: 44px 18px 30px;
-  color: #7a827b;
-  text-align: center;
-}
-
-.notes-list {
-  display: grid;
-  gap: 10px;
-  margin: 18px 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.note-card {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: 14px;
-  padding: 14px;
-  border-radius: 16px;
-  background: #f4f5ed;
-}
-
-.note-card .order {
-  color: #63755e;
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.75rem;
-  font-weight: 700;
-}
-
-.note-card p {
-  margin: 0;
-  overflow-wrap: anywhere;
-  line-height: 1.45;
-}
-
-.delete-button {
-  padding: 7px 9px;
-  border: 0;
-  background: transparent;
-  color: #8a5149;
-  font-size: 0.78rem;
-}
-
-.summary-output {
-  min-height: 110px;
-  margin-top: 18px;
-  padding: 18px;
-  border-radius: 16px;
-  background: #26342b;
-  color: #f5f3e8;
-}
-
-.summary-output p {
-  margin: 0;
-  line-height: 1.65;
-}
-
-.summary-output .summary-placeholder {
-  color: #aeb9ad;
+@keyframes noteIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 .sr-only {
@@ -231,26 +72,329 @@ input:focus {
   border: 0;
 }
 
-@media (max-width: 520px) {
+/* Shell ------------------------------------------------------------------ */
+
+.app-shell {
+  display: grid;
+  grid-template-columns: var(--rail-width) minmax(0, 1fr);
+  min-height: 100%;
+}
+
+/* Rail ------------------------------------------------------------------- */
+
+.rail {
+  display: flex;
+  flex-direction: column;
+  padding: 58px 36px 36px;
+  background: var(--rail);
+  border-right: 1px solid var(--line);
+}
+
+.rail h1 {
+  margin: 0;
+  font-size: 38px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+.tagline {
+  margin: 14px 0 0;
+  max-width: 15em;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.35;
+}
+
+.composer {
+  margin-top: 52px;
+}
+
+.field-label {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--faint);
+  font-size: 13px;
+}
+
+.composer textarea {
+  display: block;
+  width: 100%;
+  height: 96px;
+  padding: 15px 16px;
+  resize: none;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  color: var(--ink-soft);
+  font-family: inherit;
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.composer textarea::placeholder {
+  color: var(--faint);
+}
+
+.composer textarea:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.composer textarea:disabled {
+  opacity: 0.6;
+}
+
+.composer-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16px;
+}
+
+.counter {
+  color: var(--faint);
+  font-size: 13px;
+}
+
+/* Buttons ---------------------------------------------------------------- */
+
+.btn {
+  border: 0;
+  border-radius: var(--radius-control);
+  color: #fff;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  transition: background-color 120ms ease, opacity 120ms ease;
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+}
+
+.btn-accent {
+  padding: 11px 21px;
+  background: var(--accent);
+}
+
+.btn-accent:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+
+.btn-accent:disabled {
+  opacity: 0.4;
+}
+
+.summarize {
+  width: 100%;
+  padding: 13px 20px;
+  background: var(--dark);
+}
+
+.summarize:hover:not(:disabled) {
+  background: #000;
+}
+
+.summarize:disabled {
+  background: #dcd9d3;
+  color: var(--faint);
+}
+
+.rail-spacer {
+  flex: 1;
+  min-height: 32px;
+}
+
+/* Canvas ----------------------------------------------------------------- */
+
+.canvas {
+  padding: 56px 52px 64px;
+  overflow-y: auto;
+}
+
+.canvas-inner {
+  max-width: var(--canvas-column);
+}
+
+.canvas-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.canvas-head h2 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.count {
+  color: var(--faint);
+  font-size: 13px;
+}
+
+.error-banner {
+  margin: 0 0 16px;
+  padding: 14px 18px;
+  background: var(--danger-tint);
+  border-radius: var(--radius-panel);
+  color: var(--danger);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.summary-card {
+  margin-bottom: 18px;
+  padding: 22px 24px;
+  background: var(--dark);
+  border-radius: var(--radius-panel);
+  animation: noteIn 200ms ease both;
+}
+
+.summary-card p {
+  margin: 0;
+  color: #f3f2ef;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+/* Notes ------------------------------------------------------------------ */
+
+.notes-grid {
+  columns: 2;
+  column-gap: 17px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.note-card {
+  position: relative;
+  break-inside: avoid;
+  margin-bottom: 16px;
+  padding: 16px 46px 17px 20px;
+  background: var(--card);
+  border-radius: var(--radius-card);
+  box-shadow: 0 1px 2px rgba(23, 23, 26, 0.05);
+  animation: noteIn 200ms ease both;
+}
+
+.note-order {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--faint);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.09em;
+}
+
+.note-card p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 15px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.delete-button {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+  color: var(--faint);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 16px;
+  line-height: 1;
+  transition: color 120ms ease, background-color 120ms ease;
+}
+
+.delete-button:hover:not(:disabled) {
+  background: #f1efeb;
+  color: var(--ink);
+}
+
+.delete-button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.delete-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+/* Empty state ------------------------------------------------------------ */
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 256px;
+  padding: 32px;
+  border: 1px dashed var(--line-soft);
+  border-radius: var(--radius-panel);
+  text-align: center;
+}
+
+.empty-mark {
+  color: var(--line-soft);
+  font-size: 18px;
+  line-height: 1;
+}
+
+.empty-state p {
+  margin: 4px 0 0;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.empty-state span:last-child {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+/* Narrow harness windows ------------------------------------------------- */
+
+@media (max-width: 860px) {
   .app-shell {
-    padding: 28px 16px 36px;
+    grid-template-columns: minmax(0, 1fr);
   }
 
-  .composer-row {
-    grid-template-columns: 1fr;
+  .rail {
+    padding: 36px 28px 28px;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
   }
 
-  .primary-button {
-    min-height: 46px;
+  .rail-spacer {
+    min-height: 24px;
   }
 
-  .note-card {
-    grid-template-columns: auto 1fr;
+  .canvas {
+    padding: 32px 28px 48px;
   }
 
-  .delete-button {
-    grid-column: 2;
-    justify-self: start;
-    padding-left: 0;
+  .notes-grid {
+    columns: 1;
   }
 }
