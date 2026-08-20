@@ -29,7 +29,8 @@
     ],
     "host_api": {
       "tools": ["tool-dev-notes-summarizer"],
-      "storage": ["get", "set"]
+      "storage": ["get", "set"],
+      "llm": ["complete"]
     },
     "csp_overrides": {},
     "state_merge": "last_writer_wins"

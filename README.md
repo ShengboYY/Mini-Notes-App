@@ -114,10 +114,18 @@ In `--no-llm` mode, Summarize is expected to surface an error such as:
 
 That error proves the UI reached the Tool route while the harness deliberately disabled its LLM/sampling bridge. It is not the backend sampling test. Notes use the local legacy in-memory runtime state, so refreshing the outer dashboard or restarting `anna-app dev` is not expected to preserve them.
 
-The iframe is not granted `llm.complete` and never calls `anna.llm.complete`.
-It only calls `anna.tools.invoke`; the Executa separately negotiates
-`llm.sample` before issuing reverse `sampling/createMessage`, as required by
-the assignment.
+The iframe never calls `anna.llm.complete`; it only calls `anna.tools.invoke`,
+and the Executa separately negotiates `llm.sample` before issuing reverse
+`sampling/createMessage`.
+
+`manifest.json` still declares `ui.host_api.llm: ["complete"]`, although the
+iframe does not call `anna.llm.complete` directly. The current local runtime
+also uses this App Host API grant when routing an Executa's reverse
+`sampling/createMessage` as `llm.complete`
+(`anna_app_runtime_local/session.py::_REVERSE_RPC_ROUTE`). Without the grant,
+the reverse RPC is rejected before the LLM bridge is consulted and Summarize
+reports `[-32603] manifest does not grant 'llm.complete'` instead of the
+expected `[-32603] harness started with --no-llm`.
 
 The code evidence for storage is in `src/anna/notesStorage.ts`; there is no `localStorage`, IndexedDB, filesystem, or HTTP persistence path.
 
